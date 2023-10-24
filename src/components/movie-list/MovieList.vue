@@ -4,6 +4,8 @@
         :movie="movie"
         :key="movie.id"
         @onlike="$emit('onLike',movie.id,)"
+        @onfavorite = "$emit('onfavorite', movie.id)"
+        @onRemove = "$emit('onRemove', $event)"
         />
     </ul>
 </template>
