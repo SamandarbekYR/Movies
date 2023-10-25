@@ -3,11 +3,12 @@
         <div class="content">
             <AppInfo :allMoviesCount="movies.length" :favoriteMoviesCount="movies.filter(c => c.favorite).length" />
             <div class="search-panel">
-                <SearchPanel />
-                <AppFilter />
+                <SearchPanel @searchMovie="SearchMovieHandler" />
+                <AppFilter @AllMovies="AllMoviesHandler" @ViewMovies="AllMoviesHandler"
+                    @FavoriteMovies="AllMoviesHandler" />
             </div>
-            <MovieList :movies="movies" @onLike="onLikeHandler" @onfavorite="onfavoriteHandler"
-                @onRemove="onRemoveHandler" />
+            <MovieList :movies="filteredMovies(allmovies, viewmovies, favoritemovies, movies, term)" @onLike="onLikeHandler"
+                @onfavorite="onfavoriteHandler" @onRemove="onRemoveHandler" />
             <MovieAddForm @createMovie="createMovie" />
         </div>
     </div>
@@ -30,6 +31,10 @@ export default {
     },
     data() {
         return {
+            allmovies: true,
+            viewmovies: false,
+            favoritemovies: false,
+            term: '',
             movies: [
                 {
                     name: 'Samandarbek',
@@ -63,6 +68,39 @@ export default {
         }
     },
     methods: {
+        AllMoviesHandler(checkmovies: any) {
+            this.allmovies = checkmovies.allmovies
+            this.viewmovies = checkmovies.viewmovies
+            this.favoritemovies = checkmovies.favoritemovies
+        },
+        filteredMovies(allmovies: boolean, viewmovies: boolean, favoritemovies: boolean, arr: any, term: any) {
+             if (term.length !== 0) {
+                return arr.filter(c => c.name.indexOf(term) > -1);
+            }
+            
+            else if (allmovies) {
+                return arr;
+            }
+
+            else if (viewmovies) {
+                const maxViewars = Math.max(...arr.map(movie => movie.viewars));
+                return arr.filter(movie => movie.viewars === maxViewars);
+            }
+
+            else if (favoritemovies) {
+                // Filter movies based on favoritemovies criteria.
+                return arr.filter(c => c.favorite == true);
+            }
+
+
+            else if (term.length == 0) {
+                return arr;
+            }
+            else {
+                // Handle other cases or return an empty array.
+                return [];
+            }
+        },
         createMovie(e: any) {
             this.movies.push(e)
         },
@@ -86,6 +124,10 @@ export default {
         onRemoveHandler(id: any) {
             console.log(id)
             this.movies = this.movies.filter(c => c.id !== id)
+        },
+        SearchMovieHandler(term: string) {
+            this.term = term
+            console.log(this.term)
         }
     }
 }

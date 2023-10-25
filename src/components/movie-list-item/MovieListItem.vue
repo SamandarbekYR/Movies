@@ -1,15 +1,14 @@
 <template >
-    <li class="list-group-item d-flex justify-content-between" :class="[{ like: movie.like }, { favorite: movie.favorite }]">
+    <li class="list-group-item d-flex justify-content-between"
+        :class="[{ like: movie.like }, { favorite: movie.favorite }]">
         <span @click="onLike" class="list-group-item-label">{{ movie.name }}</span>
         <input type="number" class='list-group-item-input' :value=movie.viewars />
         <div class="d-flex justify-content-center aligin-items-center">
-            <button @click ="$emit('onfavorite', movie.id)" type="button" class="btn">
+            <button @click="$emit('onfavorite', movie.id)" type="button" class="btn">
                 <i class='bx bxs-bookmark-star'></i>
             </button>
-            <button type="submit" class="btn" @click = "$emit('onRemove', movie.id)">
-
+            <button type="submit" class="btn" @click="$emit('onRemove', movie.id)">
                 <i class='bx bx-trash bx-sm'></i>
-
             </button>
             <i class="icon-star fas fa-star "></i>
         </div>
